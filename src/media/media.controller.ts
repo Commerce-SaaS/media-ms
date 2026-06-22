@@ -1,7 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { MediaService } from './media.service';
-import { CreateMediaDto } from './dto/create-media.dto';
 
 import { MEDIA_PATTERNS } from './patterns/media_patterns';
 
