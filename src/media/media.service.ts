@@ -34,7 +34,8 @@ export class MediaService {
 
     const fileBuffer = Buffer.from(buffer);
 
-    const key = uuidv4();
+    const extension = data.file.originalname.split('.').pop();
+    const key = `${uuidv4()}.${extension}`;
 
     try {
       await this.s3Client.send(
