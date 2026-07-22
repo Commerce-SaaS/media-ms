@@ -1,12 +1,6 @@
 import {
-  BadRequestException,
-  ForbiddenException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  RequestTimeoutException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { envs } from 'src/config/envs';
@@ -29,7 +23,7 @@ export class MediaService {
   });
 
   async upload(data: any) {
-    const { buffer, originalname, mimetype } = data.file ?? {};
+    const { buffer, mimetype } = data.file ?? {};
 
     if (!buffer || !mimetype) {
       throw new RpcException({
@@ -40,7 +34,8 @@ export class MediaService {
 
     const fileBuffer = Buffer.from(buffer);
 
-    const key = uuidv4();
+    const extension = data.file.originalname.split('.').pop();
+    const key = `${uuidv4()}.${extension}`;
 
     try {
       await this.s3Client.send(
@@ -64,7 +59,7 @@ export class MediaService {
 
   async remove(id: string) {
     try {
-      const response = await this.s3Client.send(
+      await this.s3Client.send(
         new DeleteObjectCommand({
           Bucket: envs.awsBucketName,
           Key: id,
